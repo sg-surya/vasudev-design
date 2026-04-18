@@ -11,7 +11,7 @@ export function Footer() {
              Ready to build something <span className="text-zinc-400">amazing?</span>
            </h2>
            <p className="text-lg text-zinc-500 max-w-lg mb-4">
-             Join thousands of developers building faster and better with Vasudev Design's premium components.
+             Join thousands of developers building faster and better with Vasudev Design&apos;s premium components.
            </p>
            <div className="flex flex-col sm:flex-row items-center gap-4">
              <Link href="/explore" className="bg-zinc-900 text-white px-8 py-4 rounded-full text-[15px] font-semibold hover:bg-zinc-800 hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">

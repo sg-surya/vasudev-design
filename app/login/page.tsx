@@ -21,7 +21,7 @@ export default function LoginPage() {
           <div className="mb-8">
             <h2 className="text-3xl font-bold tracking-tight text-zinc-900 mb-2">Welcome back</h2>
             <p className="text-[15px] text-zinc-500">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/signup" className="font-semibold text-zinc-900 hover:text-zinc-700 hover:underline transition-all">
                 Sign up for free
               </Link>

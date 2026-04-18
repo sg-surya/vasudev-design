@@ -1,0 +1,55 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile containing public information.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["email", "createdAt"]
+    },
+    "Element": {
+      "title": "UI Element",
+      "description": "Components and elements shared by users.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "creatorId": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "likesCount": { "type": "number" },
+        "frameworkType": { "type": "string" },
+        "code": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "published", "rejected"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "creatorId", "tags", "likesCount", "frameworkType", "code", "status", "createdAt"]
+    },
+    "Admin": {
+      "title": "Admin Record",
+      "description": "Used to denote an administrator account explicitly.",
+      "type": "object",
+      "properties": {
+        "grantedAt": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles stored by uid"
+    },
+    "elements/{elementId}": {
+      "schema": { "$ref": "#/entities/Element" },
+      "description": "Shared GUI components"
+    },
+    "admins/{adminId}": {
+      "schema": { "$ref": "#/entities/Admin" },
+      "description": "Admin privileges stored by uid"
+    }
+  }
+}

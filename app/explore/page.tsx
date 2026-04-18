@@ -2,34 +2,46 @@
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ElementCard } from '@/components/ElementCard';
-import { Search, SlidersHorizontal, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
-
-// Standalone dummy components for Explore Page to avoid deep imports
-const MinimalButton = () => (
-  <button className="px-5 py-2.5 bg-zinc-900 text-white text-sm font-medium rounded-full shadow-sm hover:bg-zinc-800 hover:shadow-md transition-all active:scale-95 flex items-center gap-2 border border-zinc-800">
-    Continue <ChevronRight className="w-4 h-4 text-zinc-400" />
-  </button>
-);
-
-const SegmentedControl = () => (
-  <div className="flex items-center p-1 bg-zinc-100/80 border border-zinc-200/60 rounded-lg shadow-inner">
-    <button className="px-5 py-1.5 text-sm font-medium bg-white text-zinc-900 rounded-md shadow-sm border border-zinc-200/50">Monthly</button>
-    <button className="px-5 py-1.5 text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">Yearly</button>
-  </div>
-);
-
-const ExploreDummyElements = [
-  { id: 'ex-1', title: 'Minimal Dark Button', creator: { username: 'alex_ui', avatar: 'A' }, tags: ['button'], likesCount: 428, frameworkType: 'Tailwind', Preview: MinimalButton },
-  { id: 'ex-2', title: 'Soft Segmented Control', creator: { username: 'sarah_design', avatar: 'S' }, tags: ['nav'], likesCount: 256, frameworkType: 'React', Preview: SegmentedControl },
-  { id: 'ex-3', title: 'Secondary Button', creator: { username: 'josh_dev', avatar: 'J' }, tags: ['button'], likesCount: 120, frameworkType: 'React', Preview: () => <button className="px-5 py-2 bg-white border border-zinc-200 font-medium rounded-xl shadow-sm text-sm text-zinc-900">Cancel</button> },
-  { id: 'ex-4', title: 'Danger Badge', creator: { username: 'ui_wizard', avatar: 'U' }, tags: ['badge'], likesCount: 89, frameworkType: 'Tailwind', Preview: () => <span className="px-3 py-1 bg-red-100 text-red-700 rounded-lg font-medium text-xs">Deleted</span> },
-  { id: 'ex-5', title: 'Status Pill', creator: { username: 'alex_ui', avatar: 'A' }, tags: ['badge'], likesCount: 312, frameworkType: 'CSS', Preview: () => <span className="px-3 py-1 bg-zinc-100 text-zinc-700 rounded-full font-medium text-xs border border-zinc-200">Draft</span> },
-];
+import { Search, SlidersHorizontal, PackageOpen } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { db } from '@/lib/firebase';
+import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 
 export default function ExplorePage() {
   const frameworks = ["All", "React", "Tailwind CSS", "Next.js", "Framer Motion", "Vanilla CSS"];
   const categories = ["Components", "Buttons", "Cards", "Inputs", "Navbars", "Loaders"];
+  const [elements, setElements] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("Components");
+
+  useEffect(() => {
+    let q = query(
+      collection(db, 'elements'),
+      where('status', '==', 'published'),
+      orderBy('createdAt', 'desc')
+    );
+
+    // Filter by tags if category is not the default "Components"
+    if (selectedCategory !== "Components") {
+      q = query(
+        collection(db, 'elements'),
+        where('status', '==', 'published'),
+        where('tags', 'array-contains', selectedCategory.toLowerCase()),
+        orderBy('createdAt', 'desc')
+      );
+    }
+
+    const unsub = onSnapshot(q, 
+      (snap) => {
+        setElements(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      },
+      (err) => {
+        console.warn("Explore Listener Error:", err.message);
+      }
+    );
+
+    return () => unsub();
+  }, [selectedCategory]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -95,21 +107,34 @@ export default function ExplorePage() {
              ))}
            </div>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 xl:gap-8 pb-20">
-             {/* Multiplying dummy items for visual bulk */}
-             {[...ExploreDummyElements, ...ExploreDummyElements.map(e => ({...e, id: e.id+'2'})), ...ExploreDummyElements.map(e => ({...e, id: e.id+'3'})), ...ExploreDummyElements.map(e => ({...e, id: e.id+'4'}))].map((el, i) => (
-                <ElementCard 
-                  key={`${el.id}-${i}`}
-                  id={el.id}
-                  title={el.title}
-                  creator={el.creator}
-                  tags={el.tags}
-                  likesCount={el.likesCount}
-                  frameworkType={el.frameworkType}
-                >
-                  <el.Preview />
-                </ElementCard>
-             ))}
+           <div className="w-full flex">
+             {elements.length > 0 ? (
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 xl:gap-8 pb-20 w-full">
+                 {elements.map((el, i) => (
+                    <ElementCard 
+                      key={`${el.id}-${i}`}
+                      id={el.id}
+                      title={el.title}
+                      creator={el.creator}
+                      tags={el.tags}
+                      likesCount={el.likesCount}
+                      frameworkType={el.frameworkType}
+                    >
+                      <div className="w-full h-full flex items-center justify-center text-zinc-300">
+                        <PackageOpen className="w-10 h-10 opacity-30" />
+                      </div>
+                    </ElementCard>
+                 ))}
+               </div>
+             ) : (
+               <div className="w-full py-32 flex flex-col items-center justify-center border-2 border-dashed border-zinc-200/80 rounded-3xl bg-zinc-50/50">
+                 <div className="w-16 h-16 bg-white border border-zinc-200 rounded-full flex items-center justify-center mb-5 shadow-sm">
+                   <PackageOpen className="w-7 h-7 text-zinc-400" />
+                 </div>
+                 <h3 className="text-xl font-bold text-zinc-900 mb-2 tracking-tight">No components found</h3>
+                 <p className="text-zinc-500 font-medium max-w-sm text-center">There are no published components matching your criteria yet.</p>
+               </div>
+             )}
            </div>
            
            {/* Pagination Simulation */}

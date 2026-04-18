@@ -1,0 +1,96 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Phase 3: Primitive Definition ---
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isSignedIn() { return request.auth != null; }
+    function isVerified() { return isSignedIn() && request.auth.token.email_verified == true; }
+    
+    // Bootstrapped Admin Rules
+    function isAdmin() { 
+      return isSignedIn() && (
+        request.auth.token.email == 'suryatutor48@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      ); 
+    }
+
+    // --- Phase 2: Validation Blueprints ---
+    function isValidUser(data) {
+      return data.keys().hasAll(['email', 'createdAt']) &&
+             data.size() >= 2 && data.size() <= 4 &&
+             data.email is string && data.email.size() <= 250 &&
+             data.createdAt == request.time &&
+             (data.get('displayName', '') is string) &&
+             (data.get('photoURL', '') is string);
+    }
+    
+    function isValidElement(data) {
+       return data.keys().hasAll(['title', 'creatorId', 'tags', 'likesCount', 'frameworkType', 'code', 'status', 'createdAt']) &&
+              data.title is string && data.title.size() <= 100 &&
+              data.creatorId is string && data.creatorId.size() <= 128 &&
+              data.tags is list && data.tags.size() <= 10 &&
+              data.likesCount is number &&
+              data.frameworkType is string && data.frameworkType.size() <= 50 &&
+              data.code is string && data.code.size() <= 100000 &&
+              data.status is string && data.status in ['draft', 'published', 'rejected', 'pending'] &&
+              data.createdAt == request.time;
+    }
+
+    match /users/{userId} {
+      allow get: if isSignedIn(); // Any signed-in user can view profiles
+      allow list: if isAdmin(); // Only admins can list users
+      
+      allow create: if (isVerified() || isAdmin()) &&
+                       isValidId(userId) &&
+                       request.auth.uid == userId &&
+                       incoming().email == request.auth.token.email &&
+                       isValidUser(incoming());
+                       
+      allow update: if isVerified() &&
+                       isValidId(userId) &&
+                       request.auth.uid == userId &&
+                       (
+                         isAdmin() ||
+                         (incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL']) &&
+                         (incoming().get('displayName', '') is string) &&
+                         (incoming().get('photoURL', '') is string))
+                       );
+      
+      allow delete: if isAdmin();
+    }
+    
+    match /elements/{elementId} {
+      // List rules explicitly enforce the query
+      allow get: if existing().status == 'published' || (isSignedIn() && existing().creatorId == request.auth.uid) || isAdmin();
+      allow list: if resource.data.status == 'published' || (isSignedIn() && resource.data.creatorId == request.auth.uid) || isAdmin();
+      
+      allow create: if isVerified() && 
+                       isValidId(elementId) && 
+                       incoming().creatorId == request.auth.uid && 
+                       isValidElement(incoming());
+                       
+      allow update: if isVerified() && isValidId(elementId) && 
+                       (
+                         isAdmin() || 
+                         (existing().creatorId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'tags', 'code', 'frameworkType', 'updatedAt']))
+                       );
+                       
+      allow delete: if isAdmin() || (isSignedIn() && existing().creatorId == request.auth.uid);
+    }
+
+    match /admins/{adminId} {
+       allow get: if isAdmin();
+       allow list: if isAdmin();
+       allow write: if isAdmin(); // Only existing admins can add admins
+    }
+  }
+}

@@ -3,74 +3,36 @@ import { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ElementCard } from '@/components/ElementCard';
-import { Search, ChevronRight, Check } from 'lucide-react';
-
-// --- PREMIUM DUMMY COMPONENTS ---
-
-const MinimalButton = () => (
-  <button className="px-5 py-2.5 bg-zinc-900 text-white text-sm font-medium rounded-full shadow-sm hover:bg-zinc-800 hover:shadow-md transition-all active:scale-95 flex items-center gap-2 border border-zinc-800">
-    Continue <ChevronRight className="w-4 h-4 text-zinc-400" />
-  </button>
-);
-
-const SegmentedControl = () => (
-  <div className="flex items-center p-1 bg-zinc-100/80 border border-zinc-200/60 rounded-lg shadow-inner">
-    <button className="px-5 py-1.5 text-sm font-medium bg-white text-zinc-900 rounded-md shadow-sm border border-zinc-200/50">Monthly</button>
-    <button className="px-5 py-1.5 text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">Yearly</button>
-  </div>
-);
-
-const AvatarGroup = () => (
-  <div className="flex -space-x-3 hover:space-x-1 transition-all duration-300">
-    {[1,2,3,4].map(i => (
-      <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-zinc-100 flex items-center justify-center text-xs font-semibold text-zinc-500 shadow-sm transition-transform hover:scale-110 cursor-pointer">
-        U{i}
-      </div>
-    ))}
-  </div>
-);
-
-const CleanCheckbox = () => (
-  <label className="flex items-center gap-3 cursor-pointer group">
-    <div className="relative flex items-center justify-center w-5 h-5 border border-zinc-300 rounded-md bg-zinc-900 shadow-sm transition-colors">
-      <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
-    </div>
-    <span className="text-sm font-medium text-zinc-700 select-none">Remember device</span>
-  </label>
-);
-
-const SkeletonPattern = () => (
-  <div className="w-full max-w-[200px] flex flex-col gap-4">
-    <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-full bg-zinc-200 animate-pulse"></div>
-      <div className="flex flex-col gap-2">
-        <div className="w-24 h-2.5 rounded-full bg-zinc-200 animate-pulse"></div>
-        <div className="w-16 h-2 rounded-full bg-zinc-100 animate-pulse"></div>
-      </div>
-    </div>
-  </div>
-);
-
-const StatusBadge = () => (
-  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200/60 text-green-700 text-[13px] font-medium shadow-sm">
-    <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
-    Operational
-  </span>
-);
+import { Search, ChevronRight, Check, PackageOpen } from 'lucide-react';
+import { useEffect } from 'react';
+import { db } from '@/lib/firebase';
+import { collection, query, where, orderBy, limit, onSnapshot } from 'firebase/firestore';
 
 export default function Home() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [elements, setElements] = useState<any[]>([]);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, 'elements'),
+      where('status', '==', 'published'),
+      orderBy('createdAt', 'desc'),
+      limit(20)
+    );
+
+    const unsub = onSnapshot(q, 
+      (snap) => {
+        setElements(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      },
+      (err) => {
+        console.warn("Home Elements Listener (reconnecting):", err.message);
+      }
+    );
+
+    return () => unsub();
+  }, []);
   
   const categories = ["All", "Buttons", "Forms", "Navigation", "Loaders", "Badges", "Cards"];
-  
-  const dummyElements = [
-    { id: 'el-1', title: 'Minimal Dark Button', creator: { username: 'alex_ui', avatar: 'A' }, tags: ['button', 'minimal'], likesCount: 428, frameworkType: 'Tailwind', preview: <MinimalButton /> },
-    { id: 'el-2', title: 'Soft Segmented Control', creator: { username: 'sarah_design', avatar: 'S' }, tags: ['toggle', 'nav'], likesCount: 256, frameworkType: 'React', preview: <SegmentedControl /> },
-    { id: 'el-3', title: 'Micro-interaction Avatars', creator: { username: 'motion_pro', avatar: 'M' }, tags: ['avatar', 'group'], likesCount: 892, frameworkType: 'React', preview: <AvatarGroup /> },
-    { id: 'el-4', title: 'Accessible Checkbox', creator: { username: 'form_hero', avatar: 'F' }, tags: ['input', 'form'], likesCount: 314, frameworkType: 'CSS', preview: <CleanCheckbox /> },
-    { id: 'el-5', title: 'Clean Skeleton Loader', creator: { username: 'skeleton_king', avatar: 'K' }, tags: ['loader', 'skeleton'], likesCount: 512, frameworkType: 'Tailwind', preview: <SkeletonPattern /> },
-    { id: 'el-6', title: 'Pulsing Status Badge', creator: { username: 'ui_wizard', avatar: 'U' }, tags: ['badge', 'status'], likesCount: 198, frameworkType: 'Tailwind', preview: <StatusBadge /> },
-  ];
 
   return (
     <>
@@ -225,21 +187,33 @@ export default function Home() {
                  ? 'h-auto overflow-visible [mask-image:none]' 
                  : 'h-[1100px] xl:h-[900px] overflow-hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)]'
              }`}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8 pb-12">
-                  {[...dummyElements, ...dummyElements.map(e => ({...e, id: e.id + '-2'})), ...dummyElements.map(e => ({...e, id: e.id + '-3'})), ...dummyElements.map(e => ({...e, id: e.id + '-4'}))].map((el, index) => (
-                    <ElementCard 
-                      key={`${el.id}-${index}`}
-                      id={el.id}
-                      title={el.title}
-                      creator={el.creator}
-                      tags={el.tags}
-                      likesCount={el.likesCount}
-                      frameworkType={el.frameworkType}
-                    >
-                      {el.preview}
-                    </ElementCard>
-                  ))}
-                </div>
+                {elements.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8 pb-12">
+                    {elements.map((el, index) => (
+                      <ElementCard 
+                        key={`${el.id}-${index}`}
+                        id={el.id}
+                        title={el.title}
+                        creator={el.creator}
+                        tags={el.tags}
+                        likesCount={el.likesCount}
+                        frameworkType={el.frameworkType}
+                      >
+                        <div className="w-full h-full flex items-center justify-center text-zinc-300">
+                           <PackageOpen className="w-10 h-10 opacity-30" />
+                        </div>
+                      </ElementCard>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="w-full py-40 flex flex-col items-center justify-center border-2 border-dashed border-zinc-200/80 rounded-3xl bg-zinc-50/50 mt-8 mb-20">
+                     <div className="w-16 h-16 bg-white border border-zinc-200 rounded-full flex items-center justify-center mb-5 shadow-sm">
+                       <PackageOpen className="w-7 h-7 text-zinc-400" />
+                     </div>
+                     <h3 className="text-xl font-bold text-zinc-900 mb-2 tracking-tight">No components yet</h3>
+                     <p className="text-zinc-500 font-medium max-w-sm text-center">Be the first to publish a component and grow the library.</p>
+                  </div>
+                )}
              </div>
              
              {/* Premium Floating Load More Button */}

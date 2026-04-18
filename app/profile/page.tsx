@@ -1,40 +1,24 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Footer } from '@/components/Footer';
 import { ElementCard } from '@/components/ElementCard';
-import { MapPin, Calendar, Link as LinkIcon, Edit3, LayoutGrid, Heart, Bookmark, ChevronRight, Share2, ArrowLeft, MoreHorizontal } from 'lucide-react';
-
-const DummyButton = () => (
-  <button className="px-5 py-2.5 bg-black text-white text-sm font-medium rounded-full shadow-lg flex items-center gap-2">
-    Continue <ChevronRight className="w-4 h-4 text-zinc-400" />
-  </button>
-);
-
-const DummyCard = () => (
-  <div className="p-4 bg-white border border-zinc-200 shadow-sm rounded-2xl w-full max-w-[200px]">
-    <div className="h-8 w-8 bg-zinc-100 rounded-lg mb-3"></div>
-    <div className="h-4 w-2/3 bg-zinc-200 rounded-full mb-2"></div>
-    <div className="h-3 w-1/2 bg-zinc-100 rounded-full"></div>
-  </div>
-);
-
-const UserElements = [
-  { id: 'usr-1', title: 'Action Button', creator: { username: 'alex_ui', avatar: 'A' }, tags: ['button', 'dark'], likesCount: 428, frameworkType: 'Tailwind', Preview: DummyButton },
-  { id: 'usr-2', title: 'Pricing Card structure', creator: { username: 'alex_ui', avatar: 'A' }, tags: ['card', 'pricing'], likesCount: 256, frameworkType: 'React', Preview: DummyCard },
-  { id: 'usr-3', title: 'Action Button Vol 2', creator: { username: 'alex_ui', avatar: 'A' }, tags: ['button'], likesCount: 96, frameworkType: 'React', Preview: DummyButton },
-];
+import { MapPin, Calendar, Link as LinkIcon, Edit3, LayoutGrid, Heart, Bookmark, Share2, ArrowLeft, MoreHorizontal, LogOut, Loader2, PackageOpen } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('creations');
+  const { user, loading, logOut } = useAuth();
+  const [elements, setElements] = useState<any[]>([]);
+  const [fetchingElements, setFetchingElements] = useState(false);
+  
+  const handleLogout = async () => {
+    await logOut();
+    window.location.href = '/';
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* 
-        Removed Standard Navbar 
-        Using Custom Immersive Header inside the Banner instead
-      */}
-      
       {/* Premium Rounded Banner */}
       <div className="w-full px-[2px] sm:px-[4px] pt-[2px] sm:pt-[4px]">
         <div className="w-full h-[240px] md:h-[320px] lg:h-[380px] relative overflow-hidden bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-200 border border-zinc-200/60 rounded-[2rem] shadow-none">
@@ -44,9 +28,11 @@ export default function ProfilePage() {
            <Link href="/" className="bg-white/60 hover:bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-full text-[13px] font-bold text-zinc-900 border border-white/40 shadow-sm transition-all flex items-center gap-2">
              <ArrowLeft className="w-4 h-4" /> Home
            </Link>
-           <button className="w-10 h-10 bg-white/60 hover:bg-white/90 backdrop-blur-md rounded-full border border-white/40 shadow-sm transition-all flex items-center justify-center text-zinc-900">
-             <MoreHorizontal className="w-5 h-5" />
-           </button>
+           {user && (
+             <button onClick={handleLogout} className="bg-white/60 hover:bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-full text-[13px] font-bold text-red-600 border border-white/40 shadow-sm transition-all flex items-center gap-2">
+               <LogOut className="w-4 h-4" /> Sign Out
+             </button>
+           )}
         </div>
 
         {/* Subtle Textures */}
@@ -67,42 +53,58 @@ export default function ProfilePage() {
       <main className="flex-1 w-full pb-24">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-20">
           
-          <div className="flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-end -mt-16 md:-mt-24 mb-12">
-            {/* Avatar Block */}
-            <div className="p-2.5 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
-              <div className="w-32 h-32 md:w-44 md:h-44 rounded-[2rem] bg-gradient-to-tr from-zinc-900 to-zinc-700 flex items-center justify-center border border-zinc-800 relative overflow-hidden group cursor-pointer">
-                <span className="text-4xl md:text-6xl text-white font-bold tracking-tighter relative z-10 group-hover:scale-110 transition-transform duration-500">AD</span>
-                <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.4)] pointer-events-none"></div>
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm z-20">
-                  <Edit3 className="w-6 h-6 text-white" />
+          {loading ? (
+             <div className="flex justify-center -mt-8 mb-12">
+               <Loader2 className="w-8 h-8 text-zinc-400 animate-spin" />
+             </div>
+          ) : (
+            <div className="flex flex-col md:flex-row gap-6 md:gap-10 items-start md:items-end -mt-16 md:-mt-24 mb-12">
+              {/* Avatar Block */}
+              <div className="p-2.5 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
+                <div className="w-32 h-32 md:w-44 md:h-44 rounded-[2rem] bg-gradient-to-tr from-zinc-900 to-zinc-700 flex items-center justify-center border border-zinc-800 relative overflow-hidden group cursor-pointer">
+                  {user?.photoURL ? (
+                    <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover relative z-10 group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
+                  ) : (
+                    <span className="text-4xl md:text-6xl text-white font-bold tracking-tighter relative z-10 group-hover:scale-110 transition-transform duration-500">
+                      {user?.displayName?.charAt(0) || 'U'}
+                    </span>
+                  )}
+                  <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.4)] pointer-events-none z-10"></div>
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm z-20">
+                    <Edit3 className="w-6 h-6 text-white" />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Profile Meta */}
-            <div className="flex-1 pb-4">
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 mb-2">Alex Designer</h1>
-              <p className="text-[17px] md:text-[19px] text-zinc-500 font-medium mb-5">
-                @alex_ui <span className="mx-2 text-zinc-300">•</span> UI/UX Engineer
-              </p>
-              
-              <div className="flex flex-wrap items-center gap-5 text-[14px] text-zinc-500 font-medium">
-                <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-zinc-400" /> San Francisco, CA</span>
-                <span className="flex items-center gap-1.5"><LinkIcon className="w-4 h-4 text-zinc-400" /> <a href="#" className="text-zinc-700 hover:text-zinc-900 font-semibold hover:underline">alexui.co</a></span>
-                <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-zinc-400" /> Joined Apr 2024</span>
+              {/* Profile Meta */}
+              <div className="flex-1 pb-4">
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 mb-2">
+                  {user?.displayName || 'Unknown User'}
+                </h1>
+                <p className="text-[17px] md:text-[19px] text-zinc-500 font-medium mb-5">
+                  @{user?.email?.split('@')[0] || 'username'} <span className="mx-2 text-zinc-300">•</span> Member
+                </p>
+                
+                <div className="flex flex-wrap items-center gap-5 text-[14px] text-zinc-500 font-medium">
+                  {user?.metadata?.creationTime && (
+                    <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-zinc-400" /> Joined {new Date(user.metadata.creationTime).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* Actions */}
-            <div className="pb-4 flex items-center gap-3 w-full md:w-auto">
-              <button className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-zinc-900 text-white px-7 py-3.5 rounded-xl text-[14px] font-semibold hover:bg-zinc-800 hover:shadow-lg transition-all active:scale-95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
-                Edit Profile
-              </button>
-              <button className="flex items-center justify-center w-12 h-12 bg-white border border-zinc-200 text-zinc-700 rounded-xl hover:bg-zinc-50 hover:border-zinc-300 transition-all active:scale-95 shadow-sm">
-                <Share2 className="w-5 h-5" />
-              </button>
+              {/* Actions */}
+              {user && (
+                <div className="pb-4 flex items-center gap-3 w-full md:w-auto">
+                  <button className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-zinc-900 text-white px-7 py-3.5 rounded-xl text-[14px] font-semibold hover:bg-zinc-800 hover:shadow-lg transition-all active:scale-95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+                    Edit Profile
+                  </button>
+                  <button className="flex items-center justify-center w-12 h-12 bg-white border border-zinc-200 text-zinc-700 rounded-xl hover:bg-zinc-50 hover:border-zinc-300 transition-all active:scale-95 shadow-sm">
+                    <Share2 className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
             </div>
-          </div>
+          )}
 
           {/* Bio & Stats Row */}
           <div className="flex flex-col md:flex-row gap-12 mb-16 justify-between items-start md:items-center">
@@ -162,38 +164,22 @@ export default function ProfilePage() {
 
           {/* Dynamic Content Rendering */}
           {activeTab === 'creations' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-12 animate-in fade-in duration-500">
-              {[...UserElements, ...UserElements, ...UserElements].map((el, index) => (
-                 <ElementCard 
-                   key={`creation-${el.id}-${index}`}
-                   id={`${el.id}-creation-${index}`}
-                   title={el.title}
-                   creator={el.creator}
-                   tags={el.tags}
-                   likesCount={el.likesCount}
-                   frameworkType={el.frameworkType}
-                 >
-                   <el.Preview />
-                 </ElementCard>
-              ))}
+            <div className="w-full py-20 text-center flex flex-col items-center justify-center border border-dashed border-zinc-200 rounded-3xl animate-in fade-in duration-500 bg-white">
+              <div className="w-16 h-16 bg-zinc-50 border border-zinc-100 rounded-full flex items-center justify-center mb-4">
+                <PackageOpen className="w-7 h-7 text-zinc-400" />
+              </div>
+              <h3 className="text-[17px] font-bold text-zinc-900 mb-1 tracking-tight">No creations yet</h3>
+              <p className="text-zinc-500 text-[14px] font-medium max-w-sm px-4">When you publish a UI component, it will appear here on your public profile.</p>
             </div>
           )}
 
           {activeTab === 'appreciated' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-12 animate-in fade-in duration-500">
-              {[...UserElements].reverse().map((el, index) => (
-                 <ElementCard 
-                   key={`liked-${el.id}-${index}`}
-                   id={`${el.id}-liked-${index}`}
-                   title={el.title}
-                   creator={el.creator}
-                   tags={el.tags}
-                   likesCount={el.likesCount}
-                   frameworkType={el.frameworkType}
-                 >
-                   <el.Preview />
-                 </ElementCard>
-              ))}
+            <div className="w-full py-20 text-center flex flex-col items-center justify-center border border-dashed border-zinc-200 rounded-3xl animate-in fade-in duration-500 bg-white">
+              <div className="w-16 h-16 bg-zinc-50 border border-zinc-100 rounded-full flex items-center justify-center mb-4">
+                <Heart className="w-7 h-7 text-rose-400" />
+              </div>
+              <h3 className="text-[17px] font-bold text-zinc-900 mb-1 tracking-tight">No likes yet</h3>
+              <p className="text-zinc-500 text-[14px] font-medium max-w-sm px-4">Components you appreciate will be shown here.</p>
             </div>
           )}
 

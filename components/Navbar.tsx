@@ -1,10 +1,12 @@
 'use client';
 import Link from 'next/link';
-import { Layers, Plus } from 'lucide-react';
+import { Layers, Plus, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, loading, isAdmin, signIn } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,9 +51,30 @@ export function Navbar() {
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Submit</span>
           </Link>
-          <Link href="/login" className="inline-flex items-center justify-center rounded-full bg-zinc-900 text-white px-5 sm:px-6 py-2 text-[14px] font-medium hover:bg-zinc-800 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] hover:shadow-md hover:-translate-y-0.5 active:scale-95">
-            Sign In
-          </Link>
+          
+          {loading ? (
+             <div className="flex items-center justify-center px-4 w-20">
+               <Loader2 className="w-5 h-5 text-zinc-400 animate-spin" />
+             </div>
+          ) : user ? (
+            <div className="flex items-center gap-3">
+              {isAdmin && (
+                <Link href="/admin" className="hidden sm:flex text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-lg hover:bg-indigo-100 transition-colors">
+                  Admin
+                </Link>
+              )}
+              <Link href="/profile" className="w-10 h-10 rounded-full border border-zinc-200 overflow-hidden hover:border-zinc-400 hover:scale-105 transition-all shadow-sm">
+                <img src={user.photoURL || `https://api.dicebear.com/9.x/avataaars/svg?seed=${user.uid}`} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              </Link>
+            </div>
+          ) : (
+            <button 
+              onClick={() => signIn()}
+              className="inline-flex items-center justify-center rounded-full bg-zinc-900 text-white px-5 sm:px-6 py-2 text-[14px] font-medium hover:bg-zinc-800 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] hover:shadow-md hover:-translate-y-0.5 active:scale-95"
+            >
+              Sign In
+            </button>
+          )}
         </div>
         </div>
       </header>

@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css'; // Global styles
+import { AuthProvider } from '@/context/AuthContext';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -23,9 +24,11 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="antialiased selection:bg-primary/10 selection:text-primary" suppressHydrationWarning>
-        <div id="app-root" className="min-h-screen flex flex-col">
-          {children}
-        </div>
+        <AuthProvider>
+          <div id="app-root" className="min-h-screen flex flex-col">
+            {children}
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );
