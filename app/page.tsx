@@ -73,11 +73,11 @@ export default function Home() {
       <Navbar />
       <main className="flex-1 flex flex-col w-full">
         {/* HERO SECTION */}
-        <section id="hero-section" className="relative px-4 pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-white">
+        <section id="hero-section" className="relative w-full px-6 sm:px-8 xl:px-16 pt-32 md:pt-40 pb-16 md:pb-24 overflow-hidden bg-white">
           {/* Subtle Grid Background */}
-          <div className="absolute inset-x-0 top-0 h-[600px] bg-[linear-gradient(to_right,#f4f4f5_1px,transparent_1px),linear-gradient(to_bottom,#f4f4f5_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_80%,transparent_100%)] z-0 pointer-events-none"></div>
+          <div className="absolute inset-x-0 top-0 h-[700px] bg-[linear-gradient(to_right,#f4f4f5_1px,transparent_1px),linear-gradient(to_bottom,#f4f4f5_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000_80%,transparent_100%)] z-0 pointer-events-none"></div>
           
-          <div className="container mx-auto max-w-5xl text-center relative z-10 flex flex-col items-center">
+          <div className="w-full max-w-5xl mx-auto text-center relative z-10 flex flex-col items-center">
             {/* New Animated Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-50 border border-zinc-200 text-[13px] font-medium text-zinc-600 mb-8 hover:bg-zinc-100 transition-colors shadow-sm cursor-pointer group">
               <span className="relative flex h-2 w-2">
@@ -103,20 +103,20 @@ export default function Home() {
               <div className="absolute inset-0 bg-zinc-900/5 blur-2xl rounded-full scale-105 group-hover:scale-110 transition-transform duration-500 pointer-events-none"></div>
               
               {/* Premium Input Container */}
-              <div className="relative flex items-center w-full bg-white/90 backdrop-blur-md border border-zinc-200/80 rounded-full h-16 sm:h-20 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all overflow-hidden focus-within:border-zinc-300 focus-within:ring-4 focus-within:ring-zinc-900/5 focus-within:bg-white">
-                <Search className="w-6 h-6 sm:w-7 sm:h-7 text-zinc-400 ml-6 sm:ml-8 mr-4 group-focus-within:text-zinc-900 transition-colors shrink-0" />
+              <div className="relative flex items-center w-full bg-gradient-to-b from-zinc-50 to-white backdrop-blur-xl border border-zinc-200/80 rounded-[32px] h-16 sm:h-[72px] shadow-[inset_0_2px_12px_rgba(0,0,0,0.03),0_8px_30px_rgba(0,0,0,0.06)] hover:shadow-[inset_0_2px_12px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.1)] transition-all overflow-hidden focus-within:border-zinc-300 focus-within:ring-4 focus-within:ring-zinc-900/5 focus-within:bg-white p-1.5 sm:p-2">
+                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-400 ml-4 sm:ml-5 mr-3 group-focus-within:text-zinc-800 transition-colors shrink-0" />
                 
                 <input 
                   type="text" 
                   placeholder="Search for buttons, cards, wrappers..." 
-                  className="w-full h-full bg-transparent border-none outline-none text-zinc-900 text-lg sm:text-xl placeholder:text-zinc-400 placeholder:font-light font-medium"
+                  className="w-full h-full bg-transparent border-none outline-none text-zinc-900 text-base sm:text-lg placeholder:text-zinc-400 placeholder:font-light font-medium px-2"
                 />
                 
-                <div className="pr-3 shrink-0 flex items-center">
-                   <button className="hidden sm:block bg-zinc-900 text-white px-8 py-3.5 rounded-full text-[15px] font-medium hover:bg-zinc-800 hover:shadow-md transition-all active:scale-95 border border-zinc-800">
-                     Search
+                <div className="pr-1 shrink-0 flex items-center">
+                   <button className="hidden sm:flex items-center gap-2 bg-zinc-900 text-white px-6 py-2.5 sm:py-3.5 rounded-full text-[14px] font-semibold hover:bg-zinc-800 hover:shadow-lg transition-all active:scale-95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+                     Search <ChevronRight className="w-4 h-4 opacity-70" />
                    </button>
-                   <button className="block sm:hidden bg-zinc-900 text-white p-3 rounded-full hover:bg-zinc-800 hover:shadow-md transition-all active:scale-95">
+                   <button className="block sm:hidden bg-zinc-900 text-white p-4 rounded-full hover:bg-zinc-800 hover:shadow-md transition-all active:scale-95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
                      <Search className="w-5 h-5 flex-shrink-0" />
                    </button>
                 </div>
@@ -133,47 +133,63 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Hero Visual Mockup: Code vs Preview */}
-            <div className="w-full max-w-4xl mx-auto p-2 bg-zinc-50 border border-zinc-100 rounded-[24px] shadow-2xl shadow-zinc-200/50 relative hidden md:block">
-               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-300 to-transparent"></div>
-               <div className="bg-white border border-zinc-200/60 rounded-[16px] overflow-hidden flex flex-col md:flex-row h-[320px] text-left">
-                  {/* Code Side */}
-                  <div className="w-full md:w-1/2 bg-zinc-950 p-6 flex flex-col font-mono text-[13px] leading-relaxed">
-                    <div className="flex items-center gap-1.5 mb-5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
-                      <div className="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
-                      <div className="w-2.5 h-2.5 rounded-full bg-zinc-800"></div>
+            {/* Hero Visual: Overlapping Minimal Components Array */}
+            <div className="relative mt-8 w-full max-w-full mx-auto h-[260px] hidden lg:block pointer-events-none">
+              <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)] flex items-start justify-center gap-6 xl:gap-12 w-[120%] -ml-[10%]">
+                
+                {/* Left Floating Card */}
+                <div className="w-[300px] bg-white border border-zinc-200/80 rounded-3xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] translate-y-6 rotate-[-3deg] hover:rotate-0 hover:-translate-y-2 transition-all duration-500">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-500 font-bold text-xs">A</div>
+                    <div className="flex flex-col gap-2">
+                      <div className="w-24 h-2.5 bg-zinc-200 rounded-full"></div>
+                      <div className="w-16 h-2 bg-zinc-100 rounded-full"></div>
                     </div>
-                    <div className="text-zinc-400"><span className="text-pink-400">export default function</span> <span className="text-blue-400">SubscribeUI</span>() {'{'}</div>
-                    <div className="pl-4 text-zinc-300"><span className="text-pink-400">return</span> (</div>
-                    <div className="pl-8 text-zinc-400">{'<div className="flex p-1 bg-white border border-zinc-200 rounded-lg shadow-sm">'}</div>
-                    <div className="pl-12 text-zinc-400">{'<input'}</div>
-                    <div className="pl-16 text-zinc-500">{'type="email"'}</div>
-                    <div className="pl-16 text-zinc-500">{'placeholder="Email address"'}</div>
-                    <div className="pl-16 text-zinc-500">{'className="px-4 py-2 outline-none flex-1"'}</div>
-                    <div className="pl-12 text-zinc-400">{('/>')}</div>
-                    <div className="pl-12 text-zinc-400">{'<button className="bg-zinc-900 text-white px-4 py-2 rounded-md">'}</div>
-                    <div className="pl-16 text-zinc-300">Subscribe</div>
-                    <div className="pl-12 text-zinc-400">{'</button>'}</div>
-                    <div className="pl-8 text-zinc-400">{'</div>'}</div>
-                    <div className="pl-4 text-zinc-300">)</div>
-                    <div className="text-zinc-400">{'}'}</div>
                   </div>
-                  {/* Preview Side */}
-                  <div className="w-full md:w-1/2 bg-white p-8 flex items-center justify-center border-l border-zinc-100 relative">
-                     <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none opacity-40"></div>
-                     <div className="relative flex p-1 shadow-sm rounded-lg bg-white border border-zinc-200 w-full max-w-sm hover:shadow-md transition-shadow duration-300 group">
-                        <input type="email" placeholder="Email address" className="px-4 py-2 text-sm outline-none flex-1 min-w-0 bg-transparent" />
-                        <button className="bg-zinc-900 text-white px-4 py-2 text-sm font-medium rounded-md hover:bg-zinc-800 active:scale-[0.98] transition-all">Subscribe</button>
-                     </div>
+                  <div className="w-full h-16 bg-zinc-50 rounded-xl border border-zinc-100"></div>
+                </div>
+
+                {/* Center Floating Card (Primary Showcase) */}
+                <div className="w-[380px] bg-white border border-zinc-200/80 rounded-[32px] p-7 shadow-[0_24px_50px_rgb(0,0,0,0.08)] z-10 translate-y-0 relative">
+                  <div className="absolute -inset-x-6 top-10 h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent opacity-50"></div>
+                  <div className="absolute -inset-y-6 left-12 w-px bg-gradient-to-b from-transparent via-zinc-200 to-transparent opacity-50"></div>
+                  <div className="flex justify-between items-center mb-6 relative">
+                    <div className="w-32 h-3 bg-zinc-200 rounded-full"></div>
+                    <div className="w-12 h-5 bg-green-100 rounded-full flex items-center justify-center">
+                       <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                    </div>
                   </div>
-               </div>
+                  <div className="space-y-4">
+                    <div className="w-full h-12 bg-zinc-50 rounded-2xl border border-zinc-100 flex items-center px-4 gap-3 shadow-inner">
+                        <div className="w-4 h-4 rounded-full bg-zinc-200 shrink-0"></div>
+                        <div className="w-40 h-2 bg-zinc-200 rounded-full"></div>
+                    </div>
+                    <div className="w-full h-12 bg-zinc-50 rounded-2xl border border-zinc-100 flex items-center px-4 gap-3">
+                        <div className="w-4 h-4 rounded-full bg-zinc-200 shrink-0"></div>
+                        <div className="w-24 h-2 bg-zinc-200 rounded-full"></div>
+                    </div>
+                  </div>
+                  <div className="mt-8 w-full h-12 bg-zinc-900 rounded-2xl shadow-md"></div>
+                </div>
+
+                {/* Right Floating Card */}
+                <div className="w-[300px] bg-white border border-zinc-200/80 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] translate-y-10 rotate-[3deg] hover:rotate-0 hover:-translate-y-2 transition-all duration-500">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between">
+                        <div className="w-20 h-2.5 bg-zinc-200 rounded-full"></div>
+                        <div className="w-10 h-5 bg-zinc-100 rounded-full"></div>
+                    </div>
+                    <div className="w-full h-24 bg-zinc-50 rounded-2xl border border-zinc-100 shadow-inner"></div>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
         </section>
 
         {/* BROWSE SECTION */}
-        <section id="browse-section" className="container mx-auto px-4 py-16 md:py-24 flex-1">
+        <section id="browse-section" className="w-full px-6 sm:px-8 xl:px-16 py-16 md:py-24 flex-1">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
             <div>
               <h2 className="text-3xl font-semibold tracking-tight text-text-main mb-2">Curated Library</h2>
@@ -199,8 +215,8 @@ export default function Home() {
           </div>
           
           {/* Element Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 md:gap-8">
-            {dummyElements.map(el => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
+            {[...dummyElements, ...dummyElements.map(e => ({...e, id: e.id + '-2'}))].map(el => (
               <ElementCard 
                 key={el.id}
                 id={el.id}
