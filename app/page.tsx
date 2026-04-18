@@ -196,16 +196,16 @@ export default function Home() {
               <p className="text-[15px] text-text-mut font-light">Explore perfectly crafted elements by the community.</p>
             </div>
             
-            {/* Category Chips */}
-            <div className="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto scrollbar-hide" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+            {/* Premium Segmented Category Filter */}
+            <div className="flex gap-1.5 overflow-x-auto p-1.5 w-full md:w-auto scrollbar-hide bg-zinc-100/60 border border-zinc-200/50 rounded-full" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
               {categories.map((cat, i) => (
                 <button 
                   key={cat}
-                  id={`cat-chip-${cat.toLowerCase()}`}
-                  className={`whitespace-nowrap px-4 py-1.5 rounded-full text-[13px] font-medium transition-all border ${
+                  id={`premium-cat-${cat.toLowerCase()}`}
+                  className={`whitespace-nowrap px-5 py-2 rounded-full text-[13px] font-semibold transition-all ${
                     i === 0 
-                      ? 'bg-primary border-primary text-white shadow-sm' 
-                      : 'bg-white border-border-subtle text-text-sec hover:text-text-main hover:border-zinc-300 hover:bg-zinc-50'
+                      ? 'bg-white text-zinc-900 shadow-[0_2px_8px_rgb(0,0,0,0.06)] border-transparent' 
+                      : 'bg-transparent text-zinc-500 hover:text-zinc-800 hover:bg-zinc-200/30'
                   }`}
                 >
                   {cat}
@@ -214,30 +214,38 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Element Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
-            {[...dummyElements, ...dummyElements.map(e => ({...e, id: e.id + '-2'}))].map(el => (
-              <ElementCard 
-                key={el.id}
-                id={el.id}
-                title={el.title}
-                creator={el.creator}
-                tags={el.tags}
-                likesCount={el.likesCount}
-                frameworkType={el.frameworkType}
-              >
-                {el.preview}
-              </ElementCard>
-            ))}
-          </div>
-          
-          <div className="mt-16 flex justify-center">
-            <button 
-              id="btn-load-more"
-              className="px-6 py-2.5 rounded-full border border-border-subtle bg-white text-[13px] font-medium hover:bg-zinc-50 hover:border-zinc-300 transition-all text-text-sec hover:text-text-main shadow-sm"
-            >
-              Show More Results
-            </button>
+          {/* Element Grid with Fade Mask */}
+          <div className="relative">
+             <div className="relative h-[1100px] xl:h-[900px] overflow-hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8 pb-32">
+                  {[...dummyElements, ...dummyElements.map(e => ({...e, id: e.id + '-2'})), ...dummyElements.map(e => ({...e, id: e.id + '-3'}))].map((el, index) => (
+                    <ElementCard 
+                      key={`${el.id}-${index}`}
+                      id={el.id}
+                      title={el.title}
+                      creator={el.creator}
+                      tags={el.tags}
+                      likesCount={el.likesCount}
+                      frameworkType={el.frameworkType}
+                    >
+                      {el.preview}
+                    </ElementCard>
+                  ))}
+                </div>
+             </div>
+             
+             {/* Premium Floating Load More Button */}
+             <div className="absolute bottom-6 inset-x-0 flex justify-center z-20 pointer-events-none">
+               <button 
+                 id="btn-premium-load-more"
+                 className="pointer-events-auto group flex items-center gap-2 px-8 py-4 rounded-full border border-zinc-200/80 bg-white/90 backdrop-blur-md text-[14px] font-bold tracking-wide hover:shadow-[0_12px_40px_rgb(0,0,0,0.12)] hover:border-zinc-300 transition-all duration-300 text-zinc-800 hover:-translate-y-1 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+               >
+                 Discover 150+ More Components
+                 <div className="flex h-5 w-5 items-center justify-center bg-zinc-100 rounded-full group-hover:bg-zinc-200 transition-colors">
+                    <ChevronRight className="w-3.5 h-3.5 text-zinc-600 rotate-90" />
+                 </div>
+               </button>
+             </div>
           </div>
         </section>
       </main>
