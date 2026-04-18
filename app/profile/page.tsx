@@ -166,7 +166,7 @@ export default function ProfilePage() {
               {[...UserElements, ...UserElements, ...UserElements].map((el, index) => (
                  <ElementCard 
                    key={`creation-${el.id}-${index}`}
-                   id={el.id}
+                   id={`${el.id}-creation-${index}`}
                    title={el.title}
                    creator={el.creator}
                    tags={el.tags}
@@ -184,7 +184,7 @@ export default function ProfilePage() {
               {[...UserElements].reverse().map((el, index) => (
                  <ElementCard 
                    key={`liked-${el.id}-${index}`}
-                   id={el.id}
+                   id={`${el.id}-liked-${index}`}
                    title={el.title}
                    creator={el.creator}
                    tags={el.tags}

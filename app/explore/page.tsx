@@ -20,11 +20,11 @@ const SegmentedControl = () => (
 );
 
 const ExploreDummyElements = [
-  { id: 'ex-1', title: 'Minimal Dark Button', creator: { username: 'alex_ui', avatar: 'A' }, tags: ['button'], likesCount: 428, frameworkType: 'Tailwind', preview: <MinimalButton /> },
-  { id: 'ex-2', title: 'Soft Segmented Control', creator: { username: 'sarah_design', avatar: 'S' }, tags: ['nav'], likesCount: 256, frameworkType: 'React', preview: <SegmentedControl /> },
-  { id: 'ex-3', title: 'Secondary Button', creator: { username: 'josh_dev', avatar: 'J' }, tags: ['button'], likesCount: 120, frameworkType: 'React', preview: <button className="px-5 py-2 bg-white border border-zinc-200 font-medium rounded-xl shadow-sm text-sm">Cancel</button> },
-  { id: 'ex-4', title: 'Danger Badge', creator: { username: 'ui_wizard', avatar: 'U' }, tags: ['badge'], likesCount: 89, frameworkType: 'Tailwind', preview: <span className="px-3 py-1 bg-red-100 text-red-700 rounded-lg font-medium text-xs">Deleted</span> },
-  { id: 'ex-5', title: 'Status Pill', creator: { username: 'alex_ui', avatar: 'A' }, tags: ['badge'], likesCount: 312, frameworkType: 'CSS', preview: <span className="px-3 py-1 bg-zinc-100 text-zinc-700 rounded-full font-medium text-xs border border-zinc-200">Draft</span> },
+  { id: 'ex-1', title: 'Minimal Dark Button', creator: { username: 'alex_ui', avatar: 'A' }, tags: ['button'], likesCount: 428, frameworkType: 'Tailwind', Preview: MinimalButton },
+  { id: 'ex-2', title: 'Soft Segmented Control', creator: { username: 'sarah_design', avatar: 'S' }, tags: ['nav'], likesCount: 256, frameworkType: 'React', Preview: SegmentedControl },
+  { id: 'ex-3', title: 'Secondary Button', creator: { username: 'josh_dev', avatar: 'J' }, tags: ['button'], likesCount: 120, frameworkType: 'React', Preview: () => <button className="px-5 py-2 bg-white border border-zinc-200 font-medium rounded-xl shadow-sm text-sm text-zinc-900">Cancel</button> },
+  { id: 'ex-4', title: 'Danger Badge', creator: { username: 'ui_wizard', avatar: 'U' }, tags: ['badge'], likesCount: 89, frameworkType: 'Tailwind', Preview: () => <span className="px-3 py-1 bg-red-100 text-red-700 rounded-lg font-medium text-xs">Deleted</span> },
+  { id: 'ex-5', title: 'Status Pill', creator: { username: 'alex_ui', avatar: 'A' }, tags: ['badge'], likesCount: 312, frameworkType: 'CSS', Preview: () => <span className="px-3 py-1 bg-zinc-100 text-zinc-700 rounded-full font-medium text-xs border border-zinc-200">Draft</span> },
 ];
 
 export default function ExplorePage() {
@@ -107,7 +107,7 @@ export default function ExplorePage() {
                   likesCount={el.likesCount}
                   frameworkType={el.frameworkType}
                 >
-                  {el.preview}
+                  <el.Preview />
                 </ElementCard>
              ))}
            </div>
