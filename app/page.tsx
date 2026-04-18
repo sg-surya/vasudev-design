@@ -1,3 +1,5 @@
+'use client';
+import { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ElementCard } from '@/components/ElementCard';
@@ -57,6 +59,8 @@ const StatusBadge = () => (
 );
 
 export default function Home() {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
   const categories = ["All", "Buttons", "Forms", "Navigation", "Loaders", "Badges", "Cards"];
   
   const dummyElements = [
@@ -216,9 +220,13 @@ export default function Home() {
           
           {/* Element Grid with Fade Mask */}
           <div className="relative">
-             <div className="relative h-[1100px] xl:h-[900px] overflow-hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)]">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8 pb-32">
-                  {[...dummyElements, ...dummyElements.map(e => ({...e, id: e.id + '-2'})), ...dummyElements.map(e => ({...e, id: e.id + '-3'}))].map((el, index) => (
+             <div className={`relative transition-all duration-1000 ease-in-out ${
+               isExpanded 
+                 ? 'h-auto overflow-visible [mask-image:none]' 
+                 : 'h-[1100px] xl:h-[900px] overflow-hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)]'
+             }`}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8 pb-12">
+                  {[...dummyElements, ...dummyElements.map(e => ({...e, id: e.id + '-2'})), ...dummyElements.map(e => ({...e, id: e.id + '-3'})), ...dummyElements.map(e => ({...e, id: e.id + '-4'}))].map((el, index) => (
                     <ElementCard 
                       key={`${el.id}-${index}`}
                       id={el.id}
@@ -235,17 +243,20 @@ export default function Home() {
              </div>
              
              {/* Premium Floating Load More Button */}
-             <div className="absolute bottom-6 inset-x-0 flex justify-center z-20 pointer-events-none">
-               <button 
-                 id="btn-premium-load-more"
-                 className="pointer-events-auto group flex items-center gap-2 px-8 py-4 rounded-full border border-zinc-200/80 bg-white/90 backdrop-blur-md text-[14px] font-bold tracking-wide hover:shadow-[0_12px_40px_rgb(0,0,0,0.12)] hover:border-zinc-300 transition-all duration-300 text-zinc-800 hover:-translate-y-1 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
-               >
-                 Discover 150+ More Components
-                 <div className="flex h-5 w-5 items-center justify-center bg-zinc-100 rounded-full group-hover:bg-zinc-200 transition-colors">
-                    <ChevronRight className="w-3.5 h-3.5 text-zinc-600 rotate-90" />
-                 </div>
-               </button>
-             </div>
+             {!isExpanded && (
+               <div className="absolute bottom-6 inset-x-0 flex justify-center z-20 pointer-events-none">
+                 <button 
+                   onClick={() => setIsExpanded(true)}
+                   id="btn-premium-load-more"
+                   className="pointer-events-auto group flex items-center gap-2 px-8 py-4 rounded-full border border-zinc-200/80 bg-white/90 backdrop-blur-md text-[14px] font-bold tracking-wide hover:shadow-[0_12px_40px_rgb(0,0,0,0.12)] hover:border-zinc-300 transition-all duration-300 text-zinc-800 hover:-translate-y-1 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+                 >
+                   Discover 150+ More Components
+                   <div className="flex h-5 w-5 items-center justify-center bg-zinc-100 rounded-full group-hover:bg-zinc-200 transition-colors">
+                      <ChevronRight className="w-3.5 h-3.5 text-zinc-600 rotate-90" />
+                   </div>
+                 </button>
+               </div>
+             )}
           </div>
         </section>
       </main>
