@@ -99,94 +99,61 @@ export default function SignupPage() {
         </div>
       </div>
 
-      {/* Right Column: Premium Showcase (Signup variant) */}
-      <div className="hidden lg:flex relative flex-1 bg-zinc-950 items-center justify-center overflow-hidden">
-         {/* Glowing Orbs - Emerald/Teal vibe for new user growth */}
-         <div className="absolute top-[0%] right-[10%] w-[500px] h-[500px] rounded-full bg-emerald-500/10 blur-[120px] pointer-events-none"></div>
-         <div className="absolute bottom-[0%] left-[0%] w-[600px] h-[600px] rounded-full bg-teal-500/10 blur-[130px] pointer-events-none"></div>
-         
-         {/* Dot Grid */}
-         <div className="absolute inset-0 bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-40"></div>
+      {/* Right Column: Premium Artistic Showcase (Signup variant) */}
+      <div className="hidden lg:flex relative flex-1 bg-[#030303] items-center justify-center overflow-hidden">
+         {/* Subtle ambient light */}
+         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-zinc-800/20 to-transparent blur-3xl rounded-full pointer-events-none translate-x-1/4 -translate-y-1/4"></div>
 
-         {/* Floating Elements Showcase */}
-         <div className="relative z-10 flex flex-col items-center justify-center w-full px-16">
-            
-            {/* Main Visual - A stacked grid of code and components */}
-            <div className="relative w-full max-w-[550px] mb-12 animate-[float_7s_ease-in-out_infinite]">
+         <div className="relative z-10 w-full px-12 xl:px-24 flex flex-col items-center text-center">
+            {/* Minimal Label */}
+            <div className="flex items-center gap-2.5 px-4 py-2 rounded-full border border-zinc-800/80 bg-[#0a0a0a] w-fit mb-12 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+               <span className="relative flex h-2 w-2">
+                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-40"></span>
+                 <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+               </span>
+               <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-[0.2em] leading-none mt-0.5">Architecture</span>
+            </div>
+
+            {/* Giant Elite Typography */}
+            <h1 className="text-[48px] lg:text-[56px] xl:text-[64px] font-bold text-white tracking-tighter leading-[1.05] mb-12">
+              Stop building <br />
+              from <span className="text-zinc-600">scratch.</span>
+            </h1>
+
+            {/* Abstract Design System Blueprint */}
+            <div className="relative w-full max-w-[400px] border border-zinc-800/80 bg-[#0a0a0a]/50 rounded-[2rem] overflow-hidden p-8 flex flex-col gap-6 backdrop-blur-xl shadow-2xl text-left">
+               {/* Internal Grid */}
+               <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
                
-               {/* Back card - faded */}
-               <div className="absolute top-4 -right-4 w-full h-full bg-white/5 border border-white/5 rounded-2xl p-8 backdrop-blur-md shadow-2xl scale-[0.95] opacity-50"></div>
-               
-               {/* Front card - active */}
-               <div className="relative w-full bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-2xl shadow-2xl">
-                 <div className="flex items-center justify-between mb-8">
-                    <div className="flex gap-2">
-                      <div className="w-3 h-3 rounded-full bg-rose-500/80 shadow-[0_0_10px_rgba(244,63,94,0.5)]"></div>
-                      <div className="w-3 h-3 rounded-full bg-amber-500/80 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
-                      <div className="w-3 h-3 rounded-full bg-emerald-500/80 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
-                    </div>
-                    <span className="text-[11px] font-mono text-zinc-400 tracking-widest font-semibold uppercase">Workspace</span>
+               <div className="flex items-start justify-between relative z-10">
+                 <div className="space-y-4 w-[60%]">
+                   <div className="h-1 w-12 bg-zinc-700 rounded-full"></div>
+                   <div className="h-3 w-full bg-white rounded-full shadow-[0_0_15px_rgba(255,255,255,0.1)]"></div>
+                   <div className="h-3 w-3/4 bg-zinc-700/80 rounded-full"></div>
                  </div>
-                 
-                 <div className="flex flex-col gap-3">
-                   {/* Mock code lines */}
-                   <div className="flex items-center gap-3 font-mono text-xs text-zinc-500">
-                     <span>1</span><div className="h-2.5 w-1/3 bg-emerald-400/20 rounded"></div>
-                   </div>
-                   <div className="flex items-center gap-3 font-mono text-xs text-zinc-500">
-                     <span>2</span><div className="h-2.5 w-1/2 bg-white/10 rounded pl-4"></div>
-                   </div>
-                   <div className="flex items-center gap-3 font-mono text-xs text-zinc-500">
-                     <span>3</span><div className="h-2.5 w-1/4 bg-white/10 rounded pl-4"></div>
-                   </div>
-                   <div className="flex items-center gap-3 font-mono text-xs text-zinc-500 mb-4">
-                     <span>4</span><div className="h-2.5 w-2/3 bg-white/10 rounded"></div>
-                   </div>
-
-                   {/* Rendered mockup */}
-                   <div className="mt-4 p-4 border border-white/10 rounded-xl bg-white/5 flex items-center justify-between">
-                     <div className="flex items-center gap-3">
-                       <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500"></div>
-                       <div className="space-y-2">
-                         <div className="w-20 h-2 bg-white/20 rounded"></div>
-                         <div className="w-12 h-2 bg-white/10 rounded"></div>
-                       </div>
-                     </div>
-                     <div className="w-16 h-6 rounded-full border border-emerald-500/50 flex items-center justify-center text-[10px] text-emerald-400 font-bold uppercase tracking-wider">
-                       Active
-                     </div>
-                   </div>
+                 <div className="w-12 h-12 rounded-full border-[1.5px] border-zinc-700/50 flex items-center justify-center">
+                    <ArrowRight className="w-5 h-5 text-zinc-500 -rotate-45" />
                  </div>
+               </div>
 
-                 {/* Floating Tag */}
-                 <div className="absolute -left-8 -bottom-6 bg-white text-zinc-900 border border-zinc-200 text-sm font-bold px-6 py-3 rounded-full shadow-xl flex items-center gap-2">
-                   <span className="relative flex h-3 w-3">
-                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                     <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                   </span>
-                   Ship faster
+               <div className="flex-1 border-t border-zinc-800/80 mt-4 pt-8 flex gap-4 relative z-10">
+                 <div className="h-24 w-24 bg-zinc-800/40 rounded-2xl border border-zinc-700/30 flex items-center justify-center">
+                    <Layers className="w-6 h-6 text-zinc-500" />
+                 </div>
+                 <div className="flex-1 flex flex-col gap-3">
+                   <div className="h-10 w-full border border-zinc-700/50 border-dashed rounded-xl flex items-center px-4">
+                     <div className="w-2 h-2 rounded-full bg-zinc-600"></div>
+                   </div>
+                   <div className="h-11 w-full bg-white/5 rounded-xl border border-white/5 line-through decoration-zinc-600"></div>
                  </div>
                </div>
             </div>
-
-            {/* Testimonial */}
-            <div className="max-w-md w-full absolute bottom-16 right-16 text-right">
-              <Quote className="w-10 h-10 text-zinc-700 mb-4 opacity-50 ml-auto" />
-              <p className="text-[19px] text-zinc-300 font-medium leading-relaxed mb-6">
-                "It feels like cheating. The workflows and copy-paste components have literally saved us months of frontend development."
-              </p>
-              <div className="flex items-center justify-end gap-4">
-                <div>
-                  <div className="text-[15px] font-bold text-white">David Chen</div>
-                  <div className="text-[13px] text-zinc-400 font-medium tracking-wide">Founder at Linear</div>
-                </div>
-                <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-emerald-700 to-teal-500 border-2 border-zinc-800 shadow-md flex items-center justify-center text-white font-bold">
-                  DC
-                </div>
-              </div>
-            </div>
          </div>
-         
+
+         {/* Abstract Geometric Accents */}
+         <div className="absolute bottom-0 left-[15%] w-[1px] h-[40vh] bg-gradient-to-t from-zinc-800/80 to-transparent pointer-events-none"></div>
+         <div className="absolute top-0 right-[25%] w-[1px] h-[25vh] bg-gradient-to-b from-zinc-800/80 to-transparent pointer-events-none"></div>
+         <div className="absolute top-[30%] right-0 w-[20vw] h-[1px] bg-gradient-to-l from-zinc-800/80 to-transparent pointer-events-none"></div>
       </div>
     </div>
   );

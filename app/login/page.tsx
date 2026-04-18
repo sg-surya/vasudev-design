@@ -87,71 +87,86 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right Column: Premium Showcase */}
-      <div className="hidden lg:flex relative flex-1 bg-[#09090b] items-center justify-center overflow-hidden">
-         {/* Glowing Orbs */}
-         <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-indigo-500/20 blur-[120px] pointer-events-none"></div>
-         <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-rose-500/10 blur-[130px] pointer-events-none"></div>
-         
-         {/* Dot Grid */}
-         <div className="absolute inset-0 bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-50"></div>
+      {/* Right Column: Premium Artistic Showcase (Login variant) */}
+      <div className="hidden lg:flex relative flex-1 bg-[#030303] items-center justify-center overflow-hidden border-l border-zinc-900">
+         {/* Subtle ambient light */}
+         <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-gradient-to-tr from-zinc-800/20 to-transparent blur-3xl rounded-full pointer-events-none -translate-x-1/4 translate-y-1/4"></div>
 
-         {/* Floating UI Elements Showcase */}
-         <div className="relative z-10 flex flex-col items-center justify-center w-full px-16">
-            
-            <div className="w-full max-w-[500px] bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-2xl shadow-2xl relative mb-12 -translate-y-8 animate-[float_6s_ease-in-out_infinite]">
-               <div className="flex items-center justify-between mb-8">
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-rose-500/80 shadow-[0_0_10px_rgba(244,63,94,0.5)]"></div>
-                    <div className="w-3 h-3 rounded-full bg-amber-500/80 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
-                    <div className="w-3 h-3 rounded-full bg-emerald-500/80 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
-                  </div>
-                  <span className="text-[11px] font-mono text-zinc-400 tracking-widest font-semibold uppercase">Preview Engine</span>
+         <div className="relative z-10 w-full px-12 xl:px-24 flex flex-col items-center text-center">
+            {/* Minimal Label */}
+            <div className="flex items-center gap-2.5 px-4 py-2 rounded-full border border-zinc-800/80 bg-[#0a0a0a] w-fit mb-12 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+               <span className="relative flex h-2 w-2">
+                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-300 opacity-40"></span>
+                 <span className="relative inline-flex rounded-full h-2 w-2 bg-zinc-300"></span>
+               </span>
+               <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-[0.2em] leading-none mt-0.5">Ecosystem</span>
+            </div>
+
+            {/* Giant Elite Typography */}
+            <h1 className="text-[48px] lg:text-[56px] xl:text-[64px] font-bold text-white tracking-tighter leading-[1.05] mb-12">
+              The elite standard <br />
+              for <span className="text-zinc-600">frontend.</span>
+            </h1>
+
+            {/* Abstract Component Node Visual */}
+            <div className="relative w-full max-w-[400px] flex flex-col items-center gap-4">
+               {/* Node 1 - Faded */}
+               <div className="w-full max-w-[320px] flex justify-between items-center bg-white/5 border border-white/10 p-5 rounded-[20px] backdrop-blur-md opacity-60 translate-x-4">
+                 <div className="flex gap-4 items-center">
+                   <div className="w-10 h-10 rounded-xl bg-zinc-800/50 flex items-center justify-center border border-zinc-700/50">
+                     <Layers className="w-4 h-4 text-zinc-500" />
+                   </div>
+                   <div className="space-y-2 w-24">
+                     <div className="h-2 w-full bg-zinc-700 rounded w-full"></div>
+                     <div className="h-2 w-2/3 bg-zinc-700/50 rounded"></div>
+                   </div>
+                 </div>
+                 <div className="w-6 h-6 rounded-full border border-zinc-700 flex items-center justify-center">
+                   <div className="w-1.5 h-1.5 rounded-full bg-zinc-500"></div>
+                 </div>
                </div>
                
-               {/* Abstract Skeleton UI */}
-               <div className="space-y-5">
-                 <div className="h-5 w-3/4 bg-white/10 rounded-lg"></div>
-                 <div className="h-5 w-1/2 bg-white/10 rounded-lg"></div>
-                 
-                 <div className="flex gap-4 mt-8 pt-6 border-t border-white/5">
-                   <div className="h-12 w-32 bg-indigo-500 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)]"></div>
-                   <div className="h-12 w-32 bg-white/5 border border-white/10 rounded-xl"></div>
+               {/* Connection Line */}
+               <div className="w-px h-6 bg-gradient-to-b from-zinc-700 to-transparent -translate-x-12"></div>
+
+               {/* Node 2 - Hero / Active */}
+               <div className="w-full flex justify-between items-center bg-white border border-zinc-200 p-5 rounded-[20px] shadow-[0_0_40px_rgba(255,255,255,0.05)] -translate-x-4 relative z-10 transition-transform hover:scale-105 duration-500 cursor-default">
+                 <div className="flex gap-4 items-center">
+                   <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center border border-zinc-200">
+                     <Layers className="w-4 h-4 text-zinc-900" />
+                   </div>
+                   <div className="space-y-2 w-32">
+                     <div className="h-2 w-full bg-zinc-300 rounded"></div>
+                     <div className="h-2 w-4/5 bg-zinc-200 rounded"></div>
+                   </div>
+                 </div>
+                 <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center shadow-lg">
+                   <ArrowRight className="w-3.5 h-3.5 text-white" />
                  </div>
                </div>
 
-               {/* Floating Tag */}
-               <div className="absolute -right-6 -bottom-6 bg-white text-zinc-900 border border-zinc-200 text-sm font-bold px-5 py-2.5 rounded-full shadow-xl flex items-center gap-2">
-                 <svg className="w-4 h-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                 10k+ Developers
+               {/* Connection Line */}
+               <div className="w-px h-6 bg-gradient-to-t from-zinc-700 to-transparent translate-x-16"></div>
+
+               {/* Node 3 - Faded */}
+               <div className="w-full max-w-[280px] flex justify-between items-center bg-white/5 border border-white/10 p-5 rounded-[20px] backdrop-blur-md opacity-40 translate-x-6">
+                 <div className="flex gap-4 items-center">
+                   <div className="w-10 h-10 rounded-xl bg-zinc-800/30 flex items-center justify-center border border-zinc-700/50 border-dashed">
+                     <div className="w-2.5 h-2.5 rounded-full border-[1.5px] border-zinc-500 border-dashed"></div>
+                   </div>
+                   <div className="space-y-2 w-20">
+                     <div className="h-2 w-full bg-zinc-700/50 rounded"></div>
+                     <div className="h-2 w-1/2 bg-zinc-700/30 rounded"></div>
+                   </div>
+                 </div>
                </div>
             </div>
-
-            {/* Testimonial */}
-            <div className="max-w-md w-full absolute bottom-16 left-16">
-              <Quote className="w-10 h-10 text-zinc-700 mb-4 opacity-50" />
-              <p className="text-[19px] text-zinc-300 font-medium leading-relaxed mb-6">
-                "Vasudev Design completely revolutionized how we build UIs. The component quality and seamless integration is simply unmatched in the industry."
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-zinc-700 to-zinc-500 border-2 border-zinc-800 shadow-md flex items-center justify-center text-white font-bold">
-                  SJ
-                </div>
-                <div>
-                  <div className="text-[15px] font-bold text-white">Sarah Jenkins</div>
-                  <div className="text-[13px] text-zinc-400 font-medium tracking-wide">Lead Engineer at Vercel</div>
-                </div>
-              </div>
-            </div>
          </div>
-         
-         <style dangerouslySetInnerHTML={{__html: `
-            @keyframes float {
-              0% { transform: translateY(-8px); }
-              50% { transform: translateY(8px); }
-              100% { transform: translateY(-8px); }
-            }
-         `}} />
+
+         {/* Abstract Geometric Accents */}
+         <div className="absolute top-[20%] left-0 w-[20vw] h-[1px] bg-gradient-to-r from-zinc-800/80 to-transparent pointer-events-none"></div>
+         <div className="absolute bottom-[25%] right-0 w-[40vw] h-[1px] bg-gradient-to-l from-zinc-800/80 to-transparent pointer-events-none"></div>
+         <div className="absolute top-[40%] right-[15%] w-[1px] h-[30vh] bg-gradient-to-b from-zinc-800/80 to-transparent pointer-events-none"></div>
       </div>
     </div>
   );
