@@ -95,11 +95,14 @@ export default function AdminDashboard() {
     setIsProcessing('uploading');
     try {
       const docRef = await addDoc(collection(db, 'elements'), {
-        ...adminFormData,
+        title: adminFormData.title,
         frameworkType: adminFormData.framework,
+        category: adminFormData.category,
+        code: adminFormData.code,
         creatorId: user.uid,
         creatorName: user.displayName || 'Admin',
         creatorAvatar: user.photoURL || '',
+        status: 'published', // Direct admin uploads are auto-published
         likesCount: 0,
         tags: [adminFormData.category.toLowerCase(), adminFormData.framework.toLowerCase()],
         createdAt: serverTimestamp(),
@@ -191,7 +194,7 @@ export default function AdminDashboard() {
           <AdminNavItem active={activeView === 'users'} icon={Users} label="User Directory" count={allUsers.length} onClick={() => setActiveView('users')} />
           <AdminNavItem active={activeView === 'logs'} icon={Terminal} label="System Logs" onClick={() => setActiveView('logs')} />
           <AdminNavItem active={activeView === 'upload'} icon={Plus} label="Direct Upload" onClick={() => setActiveView('upload')} />
-          <AdminNavItem active={activeView === 'settings'} icon={Settings} label="Protocols" onClick={() => setActiveView('settings')} />
+          <AdminNavItem active={activeView === 'protocols'} icon={ShieldCheck} label="Protocols" onClick={() => setActiveView('protocols')} />
         </nav>
 
         <div className="p-5 border-t border-zinc-100 hidden lg:block">
@@ -587,18 +590,38 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {activeView === 'settings' && (
-             <div className="animate-in fade-in slide-in-from-right-4 duration-500 max-w-2xl">
+          {activeView === 'protocols' && (
+             <div className="animate-in fade-in slide-in-from-right-4 duration-500 max-w-4xl">
                 <div className="mb-10">
-                  <h3 className="text-2xl font-black tracking-tight text-zinc-900">System Protocols</h3>
-                  <p className="text-zinc-500 font-medium mt-2">Configure core operational behaviors and security gates.</p>
+                  <h3 className="text-2xl font-black tracking-tight text-zinc-900">Security Protocols</h3>
+                  <p className="text-zinc-500 font-medium mt-2">Manage restricted access and core system invariants.</p>
                 </div>
 
-                <div className="space-y-6">
-                   <ProtocolToggle label="Strict Schema Enforcement" desc="Reject all entries that don't match the master entity model exactly." active />
-                   <ProtocolToggle label="Automated Firewall Purge" desc="Automatically clear cache on every 10th deployment." />
-                   <ProtocolToggle label="Creator Verification Gate" desc="Require email verification before allowing component submissions." active />
-                   <ProtocolToggle label="Admin Handshake Protocol" desc="Enable secondary confirmation for all deletion requests." />
+                <div className="space-y-8">
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <ProtocolToggle label="Strict Schema Enforcement" desc="Reject all entries that don't match the master entity model exactly." active />
+                      <ProtocolToggle label="Automated Firewall Purge" desc="Automatically clear cache on every 10th deployment." />
+                      <ProtocolToggle label="Creator Verification Gate" desc="Require email verification before allowing component submissions." active />
+                      <ProtocolToggle label="Admin Handshake Protocol" desc="Enable secondary confirmation for all deletion requests." />
+                   </div>
+
+                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <ProtocolCluster title="Encryption Matrix">
+                         <div className="space-y-4">
+                            <ProtocolMetric label="SSL Handshake" status="Optimal" value={100} />
+                            <ProtocolMetric label="Key Rotation" status="Routine (24h)" value={75} />
+                            <ProtocolMetric label="WAF Guard" status="Active" value={100} active />
+                         </div>
+                      </ProtocolCluster>
+
+                      <ProtocolCluster title="Access Control">
+                         <div className="space-y-4">
+                            <ProtocolMetric label="MFA Enforcement" status="Strict" value={100} />
+                            <ProtocolMetric label="IP Whitelisting" status="Enabled" value={100} />
+                            <ProtocolMetric label="Super Admin" status="Locked" value={100} active />
+                         </div>
+                      </ProtocolCluster>
+                   </div>
                 </div>
              </div>
           )}
@@ -619,20 +642,53 @@ export default function AdminDashboard() {
 function ProtocolToggle({ label, desc, active }: any) {
   const [enabled, setEnabled] = useState(active);
   return (
-    <div className="bg-white border border-zinc-200 p-8 rounded-[32px] flex items-center justify-between shadow-sm">
-       <div className="pr-12">
-          <h4 className="text-sm font-bold text-zinc-900 mb-1">{label}</h4>
-          <p className="text-[12px] text-zinc-500 leading-relaxed">{desc}</p>
+    <div className="bg-white border border-zinc-200 p-6 rounded-[28px] flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
+       <div className="flex justify-between items-start mb-4">
+          <div className="bg-zinc-100 p-2 rounded-xl">
+             <ShieldCheck className={`w-4 h-4 ${enabled ? 'text-zinc-900' : 'text-zinc-400'}`} />
+          </div>
+          <button 
+            onClick={() => setEnabled(!enabled)}
+            className={`w-12 h-6 rounded-full transition-all flex items-center px-0.5 shrink-0 ${enabled ? 'bg-zinc-900' : 'bg-zinc-200'}`}
+          >
+             <div className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${enabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
+          </button>
        </div>
-       <button 
-         onClick={() => setEnabled(!enabled)}
-         className={`w-14 h-8 rounded-full transition-all flex items-center px-1 shrink-0 ${enabled ? 'bg-zinc-900' : 'bg-zinc-100'}`}
-       >
-          <div className={`w-6 h-6 rounded-full bg-white shadow-sm transition-transform ${enabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
-       </button>
+       <div>
+          <h4 className="text-[13px] font-bold text-zinc-900 mb-1">{label}</h4>
+          <p className="text-[11px] text-zinc-500 leading-relaxed font-medium">{desc}</p>
+       </div>
     </div>
   );
 }
+
+const ProtocolCluster = ({ title, children }: any) => (
+  <div className="bg-white border border-zinc-200 rounded-[32px] overflow-hidden shadow-sm">
+     <div className="bg-zinc-50/80 px-8 py-4 border-b border-zinc-200 flex items-center justify-between">
+        <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{title}</h4>
+        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+     </div>
+     <div className="p-8 space-y-2">
+        {children}
+     </div>
+  </div>
+);
+
+const ProtocolMetric = ({ label, status, value, active }: any) => (
+  <div className="space-y-2">
+     <div className="flex justify-between items-center">
+        <span className="text-[13px] font-bold text-zinc-900">{label}</span>
+        <span className={`text-[10px] font-bold uppercase tracking-tight ${active ? 'text-emerald-500' : 'text-zinc-400'}`}>{status}</span>
+     </div>
+     <div className="h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+        <div 
+          style={{ width: `${value}%` }} 
+          className={`h-full rounded-full transition-all duration-1000 ${active ? 'bg-emerald-500' : 'bg-zinc-900'}`}
+        ></div>
+     </div>
+  </div>
+);
+
 function AdminNavItem({ active, icon: Icon, label, count, onClick }: any) {
   return (
     <button 

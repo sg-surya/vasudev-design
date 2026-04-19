@@ -33,13 +33,30 @@ export async function POST(req: Request) {
       if (e.status !== 404) throw e;
     }
 
+    // Prepare the content: Wrap in a React component if it's just raw JSX
+    let formattedCode = code.trim();
+    const hasFunction = /function|const\s+\w+\s*=\s*(async\s*)?\([^)]*\)\s*=>/i.test(formattedCode) || /export\s+default/i.test(formattedCode);
+    
+    if (!hasFunction) {
+      const componentName = title.replace(/[^a-zA-Z0-9]/g, '');
+      const validName = componentName.charAt(0).toUpperCase() + componentName.slice(1) || 'Component';
+      
+      formattedCode = `import React from 'react';
+
+export default function ${validName}() {
+  return (
+    ${formattedCode}
+  );
+}`;
+    }
+
     // 2. Create or Update the file
     await octokit.rest.repos.createOrUpdateFileContents({
       owner,
       repo,
       path,
       message: `Sync component: ${title} (${elementId})`,
-      content: Buffer.from(code).toString('base64'),
+      content: Buffer.from(formattedCode).toString('base64'),
       sha,
     });
 

@@ -34,12 +34,18 @@ service cloud.firestore {
     }
     
     function isValidElement(data) {
-       return data.keys().hasAll(['title', 'creatorId', 'tags', 'likesCount', 'frameworkType', 'code', 'status', 'createdAt']) &&
+       return data.keys().hasAll(['title', 'creatorId', 'tags', 'likesCount', 'frameworkType', 'code', 'status', 'createdAt', 'category', 'creatorName']) &&
               data.title is string && data.title.size() <= 100 &&
               data.creatorId is string && data.creatorId.size() <= 128 &&
               data.tags is list && data.tags.size() <= 10 &&
               data.likesCount is number &&
               data.frameworkType is string && data.frameworkType.size() <= 50 &&
+              data.category is string && data.category.size() <= 50 &&
+              data.creatorName is string && data.creatorName.size() <= 100 &&
+              data.get('creatorAvatar', '') is string &&
+              data.get('githubUrl', '') is string &&
+              (data.get('syncedAt', request.time) is timestamp || data.get('syncedAt', null) == null) &&
+              (data.get('publishedAt', request.time) is timestamp || data.get('publishedAt', null) == null) &&
               data.code is string && data.code.size() <= 100000 &&
               data.status is string && data.status in ['draft', 'published', 'rejected', 'pending'] &&
               data.createdAt == request.time;
@@ -49,13 +55,13 @@ service cloud.firestore {
       allow get: if isSignedIn(); // Any signed-in user can view profiles
       allow list: if isAdmin(); // Only admins can list users
       
-      allow create: if (isVerified() || isAdmin()) &&
+      allow create: if isSignedIn() &&
                        isValidId(userId) &&
                        request.auth.uid == userId &&
                        incoming().email == request.auth.token.email &&
                        isValidUser(incoming());
                        
-      allow update: if isVerified() &&
+      allow update: if isSignedIn() &&
                        isValidId(userId) &&
                        request.auth.uid == userId &&
                        (
@@ -73,12 +79,12 @@ service cloud.firestore {
       allow get: if existing().status == 'published' || (isSignedIn() && existing().creatorId == request.auth.uid) || isAdmin();
       allow list: if resource.data.status == 'published' || (isSignedIn() && resource.data.creatorId == request.auth.uid) || isAdmin();
       
-      allow create: if isVerified() && 
+      allow create: if isSignedIn() && 
                        isValidId(elementId) && 
                        incoming().creatorId == request.auth.uid && 
                        isValidElement(incoming());
                        
-      allow update: if isVerified() && isValidId(elementId) && 
+      allow update: if isSignedIn() && isValidId(elementId) && 
                        (
                          isAdmin() || 
                          (existing().creatorId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'tags', 'code', 'frameworkType', 'updatedAt']))
