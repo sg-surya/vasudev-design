@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ElementCard } from '@/components/ElementCard';
+import { ShadowPreview } from '@/components/ShadowPreview';
 import { Search, ChevronRight, Check, PackageOpen } from 'lucide-react';
 import { useEffect } from 'react';
-import { db } from '@/lib/firebase';
+import { db, handleFirestoreError } from '@/lib/firebase';
 import { collection, query, where, orderBy, limit, onSnapshot } from 'firebase/firestore';
 
 export default function Home() {
@@ -24,9 +25,7 @@ export default function Home() {
       (snap) => {
         setElements(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
       },
-      (err) => {
-        console.warn("Home Elements Listener (reconnecting):", err.message);
-      }
+      (err) => handleFirestoreError(err, 'list', 'elements/published')
     );
 
     return () => unsub();
@@ -116,7 +115,7 @@ export default function Home() {
                 </div>
 
                 {/* Center Floating Card (Primary Showcase) */}
-                <div className="w-[380px] bg-white border border-zinc-200/80 rounded-[32px] p-7 shadow-[0_24px_50px_rgb(0,0,0,0.08)] z-10 translate-y-0 relative">
+                <div className="w-[380px] bg-white border border-zinc-200/80 rounded-3xl p-7 shadow-xl z-10 translate-y-0 relative">
                   <div className="absolute -inset-x-6 top-10 h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent opacity-50"></div>
                   <div className="absolute -inset-y-6 left-12 w-px bg-gradient-to-b from-transparent via-zinc-200 to-transparent opacity-50"></div>
                   <div className="flex justify-between items-center mb-6 relative">
@@ -182,38 +181,51 @@ export default function Home() {
           
           {/* Element Grid with Fade Mask */}
           <div className="relative">
-             <div className={`relative transition-all duration-1000 ease-in-out ${
-               isExpanded 
-                 ? 'h-auto overflow-visible [mask-image:none]' 
-                 : 'h-[1100px] xl:h-[900px] overflow-hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)]'
-             }`}>
-                {elements.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8 pb-12">
-                    {elements.map((el, index) => (
+              <div className={`relative transition-all duration-1000 ease-in-out ${
+                isExpanded 
+                  ? 'h-auto overflow-visible [mask-image:none]' 
+                  : 'h-[1100px] xl:h-[900px] overflow-hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)]'
+              }`}>
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-5 pb-12">
+                    {(elements.length > 0 ? elements : Array.from({length: 20})).map((el, index) => {
+                      // Generate a variety of premium light-theme UI mockups based on index
+                      const mockUI = () => {
+                        const type = index % 10;
+                        if (type === 0) return <div className="w-16 h-8 bg-zinc-100 border border-zinc-200 rounded-full p-1 relative"><div className="w-6 h-6 bg-white border border-zinc-200/60 rounded-full shadow-sm ml-auto"></div></div>; // Toggle
+                        if (type === 1) return <button className="px-6 py-2.5 bg-zinc-900 text-white rounded-full font-medium text-sm shadow-sm hover:scale-[1.02] transition-transform">Get Started</button>; // Primary Button
+                        if (type === 2) return <div className="flex gap-2"><div className="w-2.5 h-2.5 rounded-full bg-zinc-300 animate-bounce" style={{animationDelay: '0ms'}}></div><div className="w-2.5 h-2.5 rounded-full bg-zinc-300 animate-bounce" style={{animationDelay: '150ms'}}></div><div className="w-2.5 h-2.5 rounded-full bg-zinc-300 animate-bounce" style={{animationDelay: '300ms'}}></div></div>; // Loader
+                        if (type === 3) return <div className="flex flex-col gap-2"><label className="flex items-center gap-2 text-sm text-zinc-600 font-medium"><input type="radio" name={`g${index}`} className="w-3.5 h-3.5 accent-zinc-900" defaultChecked /> Option 1</label><label className="flex items-center gap-2 text-sm text-zinc-600 font-medium"><input type="radio" name={`g${index}`} className="w-3.5 h-3.5 accent-zinc-900" /> Option 2</label></div>; // Radio
+                        if (type === 4) return <button className="px-5 py-2.5 bg-white border border-zinc-200/80 shadow-sm text-zinc-800 rounded-xl font-medium text-xs flex items-center gap-2"><svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg> Star</button>; // Github Btn
+                        if (type === 5) return <div className="w-full max-w-[140px] h-9 px-3 bg-white rounded-lg border border-zinc-200/60 shadow-sm flex items-center"><span className="text-zinc-400 text-[11px] font-medium">Search...</span></div>; // Input
+                        if (type === 6) return <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-3 w-[150px] shadow-sm"><div className="flex gap-1.5 mb-2"><div className="w-2 h-2 rounded-full bg-zinc-700"></div><div className="w-2 h-2 rounded-full bg-zinc-700"></div><div className="w-2 h-2 rounded-full bg-zinc-700"></div></div><div className="text-[10px] font-mono text-zinc-400">npm init<span className="animate-pulse">_</span></div></div>; // Terminal
+                        if (type === 7) return <button className="px-5 py-2.5 bg-gradient-to-r from-zinc-800 to-zinc-950 text-white rounded-xl font-medium text-xs shadow-sm hover:opacity-90">Premium</button>; // Gradient
+                        if (type === 8) return <div className="w-20 overflow-hidden bg-zinc-100 border border-zinc-200/50 h-5 rounded-full flex items-center relative"><div className="absolute left-0 top-0 bottom-0 w-12 bg-zinc-800 rounded-full"></div><div className="absolute left-[38px] w-3.5 h-3.5 bg-white border border-zinc-200 rounded-full shadow-sm"></div></div>; // Slider
+                        return <div className="p-3 border border-zinc-200 rounded-xl bg-white shadow-sm font-medium text-zinc-900 text-xs">Brutalist</div>; // Brutalist
+                      };
+                      
+                      const element = el as any;
+                      const isReal = !!element?.id;
+                      
+                      return (
                       <ElementCard 
-                        key={`${el.id}-${index}`}
-                        id={el.id}
-                        title={el.title}
-                        creator={el.creator}
-                        tags={el.tags}
-                        likesCount={el.likesCount}
-                        frameworkType={el.frameworkType}
+                        key={isReal ? `${element.id}-${index}` : `mock-${index}`}
+                        id={isReal ? element.id : `mock-${index}`}
+                        title={isReal ? element.title : ['Theme Toggle', 'Primary Button', 'Loader', 'Radio Group', 'GitHub Button', 'Search Input', 'Terminal', 'Gradient Button', 'Slider', 'Brutalist Card'][index % 10]}
+                        creator={isReal ? {username: element.creatorName || 'unknown', avatar: element.creatorAvatar || ''} : { username: 'vasudev', avatar: '' }}
+                        tags={isReal ? element.tags || [] : []}
+                        likesCount={isReal ? element.likesCount || 0 : 42}
+                        frameworkType={isReal ? element.frameworkType : 'react'}
                       >
-                        <div className="w-full h-full flex items-center justify-center text-zinc-300">
-                           <PackageOpen className="w-10 h-10 opacity-30" />
+                        <div className="w-full h-full flex items-center justify-center">
+                           {isReal && element.code ? (
+                              <ShadowPreview htmlCode={element.code} />
+                           ) : (
+                              mockUI()
+                           )}
                         </div>
                       </ElementCard>
-                    ))}
+                    )})}
                   </div>
-                ) : (
-                  <div className="w-full py-40 flex flex-col items-center justify-center border-2 border-dashed border-zinc-200/80 rounded-3xl bg-zinc-50/50 mt-8 mb-20">
-                     <div className="w-16 h-16 bg-white border border-zinc-200 rounded-full flex items-center justify-center mb-5 shadow-sm">
-                       <PackageOpen className="w-7 h-7 text-zinc-400" />
-                     </div>
-                     <h3 className="text-xl font-bold text-zinc-900 mb-2 tracking-tight">No components yet</h3>
-                     <p className="text-zinc-500 font-medium max-w-sm text-center">Be the first to publish a component and grow the library.</p>
-                  </div>
-                )}
              </div>
              
              {/* Premium Floating Load More Button */}
@@ -222,12 +234,9 @@ export default function Home() {
                  <button 
                    onClick={() => setIsExpanded(true)}
                    id="btn-premium-load-more"
-                   className="pointer-events-auto group flex items-center gap-2 px-8 py-4 rounded-full border border-zinc-200/80 bg-white/90 backdrop-blur-md text-[14px] font-bold tracking-wide hover:shadow-[0_12px_40px_rgb(0,0,0,0.12)] hover:border-zinc-300 transition-all duration-300 text-zinc-800 hover:-translate-y-1 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+                   className="pointer-events-auto group flex items-center gap-2 px-8 py-3 rounded-full border border-zinc-200/80 bg-white backdrop-blur-md text-sm font-semibold tracking-wide hover:shadow-lg hover:border-zinc-300 transition-all duration-300 text-zinc-900 hover:-translate-y-0.5 active:scale-95 shadow-sm"
                  >
                    Discover 150+ More Components
-                   <div className="flex h-5 w-5 items-center justify-center bg-zinc-100 rounded-full group-hover:bg-zinc-200 transition-colors">
-                      <ChevronRight className="w-3.5 h-3.5 text-zinc-600 rotate-90" />
-                   </div>
                  </button>
                </div>
              )}

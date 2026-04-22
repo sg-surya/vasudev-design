@@ -183,7 +183,7 @@ export default function SubmitPage() {
 
         {/* Right Column: Live Preview mock */}
         <div className="w-full lg:w-7/12 relative hidden lg:block">
-          <div className="sticky top-[104px] w-full h-[700px] border border-zinc-200/80 bg-white rounded-[32px] overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.06)] flex flex-col">
+          <div className="sticky top-[104px] w-full h-[700px] border border-zinc-200/80 bg-white rounded-2xl overflow-hidden shadow-sm flex flex-col">
             {/* Header */}
             <div className="h-14 border-b border-zinc-100 flex items-center justify-between px-6 bg-zinc-50/80 backdrop-blur-md">
               <span className="text-[13px] font-bold tracking-wide text-zinc-700 flex items-center gap-2"><Code2 className="w-4 h-4" /> LIVE PREVIEW</span>
@@ -202,7 +202,7 @@ export default function SubmitPage() {
               <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-white/50 pointer-events-none"></div>
               
               {/* Dynamic Render Mockup */}
-              <div className="relative z-10 scale-125 bg-white p-12 rounded-[2rem] border border-zinc-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center justify-center">
+              <div className="relative z-10 scale-125 bg-white p-12 rounded-[2rem] border border-zinc-100 shadow-sm flex items-center justify-center">
                  <div dangerouslySetInnerHTML={{ __html: formData.code }} />
               </div>
             </div>

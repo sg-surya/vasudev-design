@@ -184,13 +184,13 @@ export default function ProfilePage() {
           )}
 
           {activeTab === 'bookmarks' && (
-            <div className="w-full py-24 text-center flex flex-col items-center justify-center border-2 border-dashed border-zinc-200 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500 bg-zinc-50/50">
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm border border-zinc-100 mb-5">
+            <div className="w-full py-20 text-center flex flex-col items-center justify-center border border-dashed border-zinc-200 rounded-3xl animate-in fade-in duration-500 bg-white">
+              <div className="w-16 h-16 bg-zinc-50 rounded-full flex items-center justify-center border border-zinc-100 mb-4">
                 <Bookmark className="w-7 h-7 text-indigo-400" />
               </div>
-              <h3 className="text-[19px] font-bold text-zinc-900 mb-2 tracking-tight">No bookmarks yet</h3>
-              <p className="text-zinc-500 text-[15px] font-medium max-w-md">Components and templates you save will appear here for quick access.</p>
-              <button onClick={() => setActiveTab('creations')} className="mt-8 bg-zinc-900 text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-zinc-800 transition-colors shadow-sm">
+              <h3 className="text-[17px] font-bold text-zinc-900 mb-1 tracking-tight">No bookmarks yet</h3>
+              <p className="text-zinc-500 text-[14px] font-medium max-w-sm px-4">Components and templates you save will appear here for quick access.</p>
+              <button className="mt-8 bg-zinc-900 text-white px-6 py-2.5 rounded-full text-[13px] font-semibold hover:bg-zinc-800 transition-colors shadow-sm">
                 Browse Components
               </button>
             </div>

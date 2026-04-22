@@ -5,7 +5,7 @@ import { ElementCard } from '@/components/ElementCard';
 import { Search, SlidersHorizontal, PackageOpen } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { db } from '@/lib/firebase';
+import { db, handleFirestoreError } from '@/lib/firebase';
 import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 
 export default function ExplorePage() {
@@ -35,9 +35,7 @@ export default function ExplorePage() {
       (snap) => {
         setElements(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
       },
-      (err) => {
-        console.warn("Explore Listener Error:", err.message);
-      }
+      (err) => handleFirestoreError(err, 'list', 'elements/published')
     );
 
     return () => unsub();
